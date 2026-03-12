@@ -5,25 +5,32 @@
 
 import { Platform } from 'react-native';
 
-const tintColorLight = '#0a7ea4';
-const tintColorDark = '#fff';
+const tintColorLight = '#2D5A27'; // Vert Forêt profond
+const tintColorDark = '#4CAF50';  // Vert plus clair pour ressortir sur fond sombre
+const accentColor = '#E9C46A';    // Sable chaleureux
 
 export const Colors = {
   light: {
-    text: '#11181C',
-    background: '#fff',
+    text: '#1A1D1A', // Noir très légèrement teinté de vert
+    background: '#F8F9FA', // Coquille d'œuf
     tint: tintColorLight,
-    icon: '#687076',
-    tabIconDefault: '#687076',
+    accent: accentColor,
+    icon: '#687066',
+    tabIconDefault: '#687066',
     tabIconSelected: tintColorLight,
+    cardBackground: '#FFFFFF',
+    border: '#E8EBE8',
   },
   dark: {
-    text: '#ECEDEE',
-    background: '#151718',
+    text: '#ECF0EC',
+    background: '#121512', // Noir teinté vert forêt
     tint: tintColorDark,
-    icon: '#9BA1A6',
-    tabIconDefault: '#9BA1A6',
+    accent: accentColor,
+    icon: '#9AA49A',
+    tabIconDefault: '#9AA49A',
     tabIconSelected: tintColorDark,
+    cardBackground: '#1E231E', // Légèrement plus clair que le fond
+    border: '#2C332C',
   },
 };
 

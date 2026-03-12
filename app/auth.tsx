@@ -1,0 +1,185 @@
+import React, { useState } from 'react';
+import { StyleSheet, View, TextInput, Alert, Text, TouchableOpacity, Platform } from 'react-native';
+import { supabase } from '@/utils/supabase';
+import { Colors } from '@/constants/theme';
+import { useColorScheme } from '@/hooks/use-color-scheme';
+
+export default function AuthScreen() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [isLogin, setIsLogin] = useState(true);
+  const [message, setMessage] = useState<{ text: string, type: 'error' | 'success'} | null>(null);
+  const colorScheme = useColorScheme();
+  const theme = Colors[colorScheme ?? 'light'];
+
+  async function signInWithEmail() {
+    setLoading(true);
+    setMessage(null);
+    const { error } = await supabase.auth.signInWithPassword({
+      email: email,
+      password: password,
+    });
+
+    if (error) {
+      setMessage({ text: error.message, type: 'error' });
+      if (Platform.OS !== 'web') Alert.alert('Erreur', error.message);
+    }
+    setLoading(false);
+  }
+
+  async function signUpWithEmail() {
+    setLoading(true);
+    setMessage(null);
+    const {
+      data: { session },
+      error,
+    } = await supabase.auth.signUp({
+      email: email,
+      password: password,
+    });
+
+    if (error) {
+      setMessage({ text: error.message, type: 'error' });
+      if (Platform.OS !== 'web') Alert.alert('Erreur', error.message);
+    } else if (!session) {
+      setMessage({ text: 'Succès ! Veuillez vérifier votre boîte de réception pour confirmer votre email.', type: 'success' });
+      if (Platform.OS !== 'web') Alert.alert('Succès', 'Veuillez vérifier votre boîte de réception pour confirmer votre email !');
+    }
+    setLoading(false);
+  }
+
+  return (
+    <View style={[styles.container, { backgroundColor: theme.background }]}>
+      <Text style={[styles.title, { color: theme.text }]}>
+        {isLogin ? 'Connexion' : 'Inscription'}
+      </Text>
+
+      {message && (
+        <View style={[styles.messageBox, message.type === 'error' ? styles.messageError : styles.messageSuccess]}>
+          <Text style={[styles.messageText, message.type === 'error' ? styles.messageTextError : styles.messageTextSuccess]}>
+            {message.text}
+          </Text>
+        </View>
+      )}
+      
+      <View style={[styles.verticallySpaced, styles.mt20]}>
+        <TextInput
+          style={[styles.input, { color: theme.text, borderColor: theme.icon }]}
+          onChangeText={(text) => setEmail(text)}
+          value={email}
+          placeholder="email@address.com"
+          placeholderTextColor={theme.icon}
+          autoCapitalize={'none'}
+        />
+      </View>
+      <View style={styles.verticallySpaced}>
+        <TextInput
+          style={[styles.input, { color: theme.text, borderColor: theme.icon }]}
+          onChangeText={(text) => setPassword(text)}
+          value={password}
+          secureTextEntry={true}
+          placeholder="Mot de passe"
+          placeholderTextColor={theme.icon}
+          autoCapitalize={'none'}
+        />
+      </View>
+      
+      <View style={[styles.verticallySpaced, styles.mt20]}>
+        <TouchableOpacity
+          style={[styles.button, { backgroundColor: theme.tint }]}
+          onPress={() => isLogin ? signInWithEmail() : signUpWithEmail()}
+          disabled={loading}
+        >
+          <Text style={styles.buttonText}>
+            {isLogin ? 'Se connecter' : "S'inscrire"}
+          </Text>
+        </TouchableOpacity>
+      </View>
+      
+      <View style={styles.verticallySpaced}>
+        <TouchableOpacity 
+          onPress={() => setIsLogin(!isLogin)}
+          style={styles.switchButton}
+        >
+          <Text style={[styles.switchText, { color: theme.tint }]}>
+            {isLogin 
+              ? "Pas encore de compte ? S'inscrire" 
+              : "Déjà un compte ? Se connecter"}
+          </Text>
+        </TouchableOpacity>
+      </View>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    padding: 12,
+    flex: 1,
+    justifyContent: 'center',
+  },
+  title: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginBottom: 40,
+  },
+  verticallySpaced: {
+    paddingTop: 4,
+    paddingBottom: 4,
+    alignSelf: 'stretch',
+  },
+  mt20: {
+    marginTop: 20,
+  },
+  input: {
+    height: 50,
+    borderWidth: 1,
+    borderRadius: 8,
+    paddingHorizontal: 15,
+    fontSize: 16,
+  },
+  button: {
+    height: 50,
+    borderRadius: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  switchButton: {
+    padding: 10,
+    alignItems: 'center',
+  },
+  switchText: {
+    fontSize: 14,
+  },
+  messageBox: {
+    padding: 12,
+    borderRadius: 8,
+    marginBottom: 20,
+    borderWidth: 1,
+  },
+  messageError: {
+    backgroundColor: '#ffebee',
+    borderColor: '#ffcdd2',
+  },
+  messageSuccess: {
+    backgroundColor: '#e8f5e9',
+    borderColor: '#c8e6c9',
+  },
+  messageText: {
+    fontSize: 14,
+    textAlign: 'center',
+  },
+  messageTextError: {
+    color: '#c62828',
+  },
+  messageTextSuccess: {
+    color: '#2e7d32',
+  }
+});
