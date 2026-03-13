@@ -14,7 +14,7 @@ L.Icon.Default.mergeOptions({
   shadowUrl: require('leaflet/dist/images/marker-shadow.png')
 });
 
-// Custom Icon for dogshare theme
+// Custom Icon for ooaff theme
 const customMarkerIcon = new L.Icon({
   iconUrl: require('leaflet/dist/images/marker-icon.png'),
   iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png'),
@@ -23,7 +23,7 @@ const customMarkerIcon = new L.Icon({
   iconAnchor: [12, 41],
   popupAnchor: [1, -34],
   shadowSize: [41, 41],
-  className: 'dogshare-marker'
+  className: 'ooaff-marker'
 });
 
 export const PlatformMap = ({ sittings, userLat, userLng, theme, onMarkerPress }: any) => {
@@ -99,7 +99,7 @@ export const PlatformMap = ({ sittings, userLat, userLng, theme, onMarkerPress }
       </MapContainer>
       <style>
          {`
-           .dogshare-marker { filter: hue-rotate(150deg); }
+           .ooaff-marker { filter: hue-rotate(150deg); }
          `}
       </style>
     </div>

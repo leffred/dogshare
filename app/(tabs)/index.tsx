@@ -67,7 +67,7 @@ export default function HomeScreen() {
       headerImage={
         <View style={[styles.headerContainer, { paddingTop: Math.max(insets.top, 40) }]}>
           <IconSymbol name="pawprint.fill" size={80} color="#fff" style={{opacity: 0.2, position: 'absolute', right: -20, bottom: -20}} />
-          <Text style={styles.headerTitle}>DogShare</Text>
+          <Text style={styles.headerTitle}>OOAFF</Text>
           <Text style={styles.headerSubtitle}>L'entraide entre maîtres</Text>
         </View>
       }>
