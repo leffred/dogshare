@@ -67,7 +67,14 @@ export default function HomeScreen() {
       headerImage={
         <View style={[styles.headerContainer, { paddingTop: Math.max(insets.top, 40) }]}>
           <IconSymbol name="pawprint.fill" size={80} color="#fff" style={{opacity: 0.2, position: 'absolute', right: -20, bottom: -20}} />
-          <Text style={styles.headerTitle}>OOAFF</Text>
+          <View style={{flexDirection: 'row', alignItems: 'center', marginTop: 20}}>
+            <Image 
+              source={require('@/assets/images/icon.png')} 
+              style={{ width: 42, height: 42, borderRadius: 10, marginRight: 12 }} 
+              contentFit="cover"
+            />
+            <Text style={[styles.headerTitle, { marginTop: 0 }]}>OOAFF</Text>
+          </View>
           <Text style={styles.headerSubtitle}>L'entraide entre maîtres</Text>
         </View>
       }>
