@@ -49,13 +49,21 @@ export default function CreateSittingScreen() {
   }, [user]);
 
   // Auto-calculate credits based on time duration (1 credit = 1 hour)
+  // And auto-adjust end date if start date is moved past it
   useEffect(() => {
-    if (isManualCredits) return; // Don't override if user manually typed it
-    if (startDate && endDate && endDate > startDate) {
-      const diffMs = endDate.getTime() - startDate.getTime();
-      const diffHours = Math.ceil(diffMs / (1000 * 60 * 60)); // Round up to nearest hour
-      if (diffHours > 0) {
-        setCreditsCost(diffHours.toString());
+    if (startDate && endDate) {
+      if (startDate >= endDate) {
+        // Automatically set end date to start date + 1 minute
+        setEndDate(new Date(startDate.getTime() + 60000));
+        return; // the next render will handle credit calculation
+      }
+      
+      if (!isManualCredits) {
+        const diffMs = endDate.getTime() - startDate.getTime();
+        const diffHours = Math.ceil(diffMs / (1000 * 60 * 60)); // Round up to nearest hour
+        if (diffHours > 0) {
+          setCreditsCost(diffHours.toString());
+        }
       }
     }
   }, [startDate, endDate, isManualCredits]);
@@ -117,7 +125,7 @@ export default function CreateSittingScreen() {
     }
 
     if (endDate <= startDate) {
-      Alert.alert('Erreur', 'La date de fin doit être après la date de début.');
+      Alert.alert('Erreur', 'La date de fin de garde doit être ultérieure à la date de début.');
       return;
     }
 
