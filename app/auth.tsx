@@ -58,7 +58,7 @@ export default function AuthScreen() {
           style={styles.logo} 
           resizeMode="contain" 
         />
-        <Text style={[styles.appName, { color: theme.tint }]}>DogShare</Text>
+        <Text style={[styles.appName, { color: theme.tint }]}>OOAFF</Text>
         <Text style={[styles.description, { color: theme.text }]}>
           L'application d'échange de gardes de chiens entre particuliers. Confiez votre chien en toute sérénité ou gagnez des crédits en gardant ceux des autres !
         </Text>

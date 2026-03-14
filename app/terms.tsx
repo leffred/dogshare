@@ -16,7 +16,7 @@ export default function TermsScreen() {
         
         <Text style={[styles.sectionTitle, { color: theme.text }]}>1. Objet du service</Text>
         <Text style={[styles.paragraph, { color: theme.text }]}>
-          DogShare est une plateforme mettant en relation des particuliers pour l'échange de services de garde de chiens. Le service est basé sur un système de "crédits" et n'implique aucune transaction financière directe entre les utilisateurs via l'application.
+          OOAFF est une plateforme mettant en relation des particuliers pour l'échange de services de garde de chiens. Le service est basé sur un système de "crédits" et n'implique aucune transaction financière directe entre les utilisateurs via l'application.
         </Text>
 
         <Text style={[styles.sectionTitle, { color: theme.text }]}>2. Engagement des utilisateurs</Text>
@@ -31,12 +31,12 @@ export default function TermsScreen() {
 
         <Text style={[styles.sectionTitle, { color: theme.text }]}>4. Responsabilité</Text>
         <Text style={[styles.paragraph, { color: theme.text }]}>
-          DogShare agit en tant que simple intermédiaire de mise en relation et décline toute responsabilité en cas de dommages, de perte, de vol, de maladie ou de blessure de l'animal pendant une garde. Il est recommandé aux utilisateurs de vérifier que leur assurance responsabilité civile les couvre pour ces situations.
+          OOAFF agit en tant que simple intermédiaire de mise en relation et décline toute responsabilité en cas de dommages, de perte, de vol, de maladie ou de blessure de l'animal pendant une garde. Il est recommandé aux utilisateurs de vérifier que leur assurance responsabilité civile les couvre pour ces situations.
         </Text>
 
         <Text style={[styles.sectionTitle, { color: theme.text }]}>5. Résiliation du compte</Text>
         <Text style={[styles.paragraph, { color: theme.text }]}>
-          DogShare se réserve le droit de suspendre ou de supprimer le compte de tout utilisateur ne respectant pas les présentes CGU, ou recevant des signalements répétés pour comportement inapproprié ou mauvais traitement envers les animaux.
+          OOAFF se réserve le droit de suspendre ou de supprimer le compte de tout utilisateur ne respectant pas les présentes CGU, ou recevant des signalements répétés pour comportement inapproprié ou mauvais traitement envers les animaux.
         </Text>
 
         <View style={styles.footer} />

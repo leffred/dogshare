@@ -21,7 +21,7 @@ export default function PrivacyScreen() {
 
         <Text style={[styles.sectionTitle, { color: theme.text }]}>2. Utilisation des données</Text>
         <Text style={[styles.paragraph, { color: theme.text }]}>
-          Vos données sont utilisées exclusivement pour le bon fonctionnement de l'application DogShare : mise en relation entre utilisateurs, gestion des crédits et localisation des gardes.
+          Vos données sont utilisées exclusivement pour le bon fonctionnement de l'application OOAFF : mise en relation entre utilisateurs, gestion des crédits et localisation des gardes.
         </Text>
 
         <Text style={[styles.sectionTitle, { color: theme.text }]}>3. Partage des données</Text>
