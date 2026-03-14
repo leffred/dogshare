@@ -124,14 +124,20 @@ export default function ExploreScreen() {
   }, [user, profile]);
 
   const handlePropose = (sitting: SittingWithDetails) => {
-    Alert.alert(
-      "Se proposer",
-      `Voulez-vous proposer de garder ${sitting.dogs?.name || 'ce chien'} pour ${sitting.credits_cost} crédit(s) ?`,
-      [
-        { text: "Annuler", style: "cancel" },
-        { text: "Confirmer", onPress: () => acceptSitting(sitting) }
-      ]
-    );
+    if (Platform.OS === 'web') {
+      if (window.confirm(`Voulez-vous proposer de garder ${sitting.dogs?.name || 'ce chien'} pour ${sitting.credits_cost} crédit(s) ?`)) {
+        acceptSitting(sitting);
+      }
+    } else {
+      Alert.alert(
+        "Se proposer",
+        `Voulez-vous proposer de garder ${sitting.dogs?.name || 'ce chien'} pour ${sitting.credits_cost} crédit(s) ?`,
+        [
+          { text: "Annuler", style: "cancel" },
+          { text: "Confirmer", onPress: () => acceptSitting(sitting) }
+        ]
+      );
+    }
   };
 
   const acceptSitting = async (sitting: SittingWithDetails) => {
