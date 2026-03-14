@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, TextInput, Alert, Text, TouchableOpacity, Platform, Image } from 'react-native';
+import { Link } from 'expo-router';
 import { supabase } from '@/utils/supabase';
 import { Colors } from '@/constants/theme';
 import { useColorScheme } from '@/hooks/use-color-scheme';
@@ -121,6 +122,15 @@ export default function AuthScreen() {
           </Text>
         </TouchableOpacity>
       </View>
+
+      <View style={styles.legalContainer}>
+        <Text style={[styles.legalText, { color: theme.icon }]}>
+          En continuant, vous acceptez nos{' '}
+          <Link href="/terms" style={[styles.legalLink, { color: theme.tint }]}>CGU</Link>
+          {' '}et notre{' '}
+          <Link href="/privacy" style={[styles.legalLink, { color: theme.tint }]}>Politique de confidentialité</Link>.
+        </Text>
+      </View>
     </View>
   );
 }
@@ -215,5 +225,18 @@ const styles = StyleSheet.create({
   },
   messageTextSuccess: {
     color: '#2e7d32',
+  },
+  legalContainer: {
+    marginTop: 20,
+    paddingHorizontal: 10,
+    alignItems: 'center',
+  },
+  legalText: {
+    fontSize: 12,
+    textAlign: 'center',
+    lineHeight: 18,
+  },
+  legalLink: {
+    fontWeight: 'bold',
   }
 });
