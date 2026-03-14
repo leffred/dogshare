@@ -63,16 +63,30 @@ export default function AuthScreen() {
     try {
       setLoading(true);
       setMessage(null);
-      await GoogleSignin.hasPlayServices();
-      const userInfo = await GoogleSignin.signIn();
-      if (userInfo.data?.idToken) {
-        const { data, error } = await supabase.auth.signInWithIdToken({
+      
+      if (Platform.OS === 'web') {
+        const { data, error } = await supabase.auth.signInWithOAuth({
           provider: 'google',
-          token: userInfo.data.idToken,
+          options: {
+            redirectTo: window.location.origin
+          }
         });
         if (error) throw error;
-      } else {
-        throw new Error('No ID token present!');
+        return; // Redirect happens here
+      }
+
+      const hasPlayServices = Platform.OS === 'android' ? await GoogleSignin.hasPlayServices() : true;
+      if (hasPlayServices) {
+        const userInfo = await GoogleSignin.signIn();
+        if (userInfo.data?.idToken) {
+          const { data, error } = await supabase.auth.signInWithIdToken({
+            provider: 'google',
+            token: userInfo.data.idToken,
+          });
+          if (error) throw error;
+        } else {
+          throw new Error('No ID token present!');
+        }
       }
     } catch (error: any) {
       if (error.code === statusCodes.SIGN_IN_CANCELLED) {
@@ -80,7 +94,6 @@ export default function AuthScreen() {
       } else if (error.code === statusCodes.IN_PROGRESS) {
         // operation (e.g. sign in) is in progress already
       } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
-        // play services not available or outdated
         if (Platform.OS !== 'web') Alert.alert('Erreur', 'Services Google Play non disponibles');
         setMessage({ text: 'Services Google Play non disponibles', type: 'error' });
       } else {
@@ -96,6 +109,18 @@ export default function AuthScreen() {
     try {
       setLoading(true);
       setMessage(null);
+      
+      if (Platform.OS === 'web') {
+        const { data, error } = await supabase.auth.signInWithOAuth({
+          provider: 'apple',
+          options: {
+            redirectTo: window.location.origin
+          }
+        });
+        if (error) throw error;
+        return; // Redirect happens here
+      }
+
       const credential = await AppleAuthentication.signInAsync({
         requestedScopes: [
           AppleAuthentication.AppleAuthenticationScope.FULL_NAME,
@@ -200,18 +225,16 @@ export default function AuthScreen() {
         </TouchableOpacity>
       </View>
 
-      {Platform.OS === 'ios' && (
-        <View style={[styles.verticallySpaced, styles.mt10]}>
-          <TouchableOpacity
-            style={[styles.socialButton, { backgroundColor: '#000' }]}
-            onPress={signInWithApple}
-            disabled={loading}
-          >
-            <FontAwesome name="apple" size={20} color="#fff" style={{ marginRight: 10 }} />
-            <Text style={[styles.socialButtonText, { color: '#fff' }]}>Continuer avec Apple</Text>
-          </TouchableOpacity>
-        </View>
-      )}
+      <View style={[styles.verticallySpaced, styles.mt10]}>
+        <TouchableOpacity
+          style={[styles.socialButton, { backgroundColor: '#000' }]}
+          onPress={signInWithApple}
+          disabled={loading}
+        >
+          <FontAwesome name="apple" size={20} color="#fff" style={{ marginRight: 10 }} />
+          <Text style={[styles.socialButtonText, { color: '#fff' }]}>Continuer avec Apple</Text>
+        </TouchableOpacity>
+      </View>
       
       <View style={styles.verticallySpaced}>
         <TouchableOpacity 
