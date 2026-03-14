@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useCallback, useRef } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, ScrollView, RefreshControl, Image, Platform, Animated } from 'react-native';
 import { supabase } from '@/utils/supabase';
 import { Colors } from '@/constants/theme';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { useAuth } from '@/contexts/AuthContext';
 import { IconSymbol } from '@/components/ui/icon-symbol';
-import { useRouter } from 'expo-router';
+import { useRouter, useFocusEffect } from 'expo-router';
 
 export type Dog = {
   id: string;
@@ -58,9 +58,11 @@ export default function DogsScreen() {
     }
   };
 
-  useEffect(() => {
-    fetchDogs();
-  }, [user]);
+  useFocusEffect(
+    useCallback(() => {
+      fetchDogs();
+    }, [user])
+  );
 
   const onRefresh = () => {
     setRefreshing(true);
