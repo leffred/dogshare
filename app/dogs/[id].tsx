@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useCallback } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, ScrollView, Alert, Platform, Image } from 'react-native';
 import { supabase } from '@/utils/supabase';
 import { Colors } from '@/constants/theme';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { useAuth } from '@/contexts/AuthContext';
-import { useRouter, useLocalSearchParams } from 'expo-router';
+import { useRouter, useLocalSearchParams, useFocusEffect } from 'expo-router';
 import { IconSymbol } from '@/components/ui/icon-symbol';
 
 import type { Dog } from '../(tabs)/dogs';
@@ -19,28 +19,31 @@ export default function DogDetailScreen() {
   const [dog, setDog] = useState<Dog | null>(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    async function fetchDog() {
-      if (!id) return;
-      try {
-        const { data, error } = await supabase
-          .from('dogs')
-          .select('*')
-          .eq('id', id)
-          .single();
+  const fetchDog = async () => {
+    if (!id) return;
+    try {
+      const { data, error } = await supabase
+        .from('dogs')
+        .select('*')
+        .eq('id', id)
+        .single();
 
-        if (error) throw error;
-        setDog(data);
-      } catch (error) {
-        console.error('Error fetching dog details:', error);
-        Alert.alert('Erreur', 'Impossible de charger les informations du chien.');
-        router.back();
-      } finally {
-        setLoading(false);
-      }
+      if (error) throw error;
+      setDog(data);
+    } catch (error) {
+      console.error('Error fetching dog details:', error);
+      Alert.alert('Erreur', 'Impossible de charger les informations du chien.');
+      router.back();
+    } finally {
+      setLoading(false);
     }
-    fetchDog();
-  }, [id]);
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchDog();
+    }, [id])
+  );
 
   const handleDelete = () => {
     if (Platform.OS === 'web') {
@@ -128,6 +131,14 @@ export default function DogDetailScreen() {
 
       {isOwner && (
         <View style={styles.actions}>
+          <TouchableOpacity
+            style={[styles.button, styles.editButton, { backgroundColor: theme.tint, marginBottom: 15 }]}
+            onPress={() => router.push(`/dogs/edit?id=${id}` as any)}
+          >
+            <IconSymbol name="pencil" size={20} color="#fff" style={{ marginRight: 8 }} />
+            <Text style={styles.buttonText}>Modifier</Text>
+          </TouchableOpacity>
+
           <TouchableOpacity
             style={[styles.button, styles.deleteButton]}
             onPress={handleDelete}
@@ -231,6 +242,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  editButton: {
+    // Styling handled via inline prop largely
   },
   deleteButton: {
     backgroundColor: '#dc3545',
