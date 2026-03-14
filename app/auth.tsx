@@ -4,6 +4,14 @@ import { supabase } from '@/utils/supabase';
 import { Colors } from '@/constants/theme';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { useRouter } from 'expo-router';
+import FontAwesome from '@expo/vector-icons/FontAwesome';
+import * as AppleAuthentication from 'expo-apple-authentication';
+import * as Crypto from 'expo-crypto';
+import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
+
+GoogleSignin.configure({
+  webClientId: '1060719446465-sf1ghu0rfktqfvjlq17hlmas8odg2bl5.apps.googleusercontent.com',
+});
 
 export default function AuthScreen() {
   const [email, setEmail] = useState('');
@@ -49,6 +57,70 @@ export default function AuthScreen() {
       if (Platform.OS !== 'web') Alert.alert('Succès', 'Veuillez vérifier votre boîte de réception pour confirmer votre email !');
     }
     setLoading(false);
+  }
+
+  async function signInWithGoogle() {
+    try {
+      setLoading(true);
+      setMessage(null);
+      await GoogleSignin.hasPlayServices();
+      const userInfo = await GoogleSignin.signIn();
+      if (userInfo.data?.idToken) {
+        const { data, error } = await supabase.auth.signInWithIdToken({
+          provider: 'google',
+          token: userInfo.data.idToken,
+        });
+        if (error) throw error;
+      } else {
+        throw new Error('No ID token present!');
+      }
+    } catch (error: any) {
+      if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+        // user cancelled the login flow
+      } else if (error.code === statusCodes.IN_PROGRESS) {
+        // operation (e.g. sign in) is in progress already
+      } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+        // play services not available or outdated
+        if (Platform.OS !== 'web') Alert.alert('Erreur', 'Services Google Play non disponibles');
+        setMessage({ text: 'Services Google Play non disponibles', type: 'error' });
+      } else {
+        setMessage({ text: error.message, type: 'error' });
+        if (Platform.OS !== 'web') Alert.alert('Erreur', error.message);
+      }
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function signInWithApple() {
+    try {
+      setLoading(true);
+      setMessage(null);
+      const credential = await AppleAuthentication.signInAsync({
+        requestedScopes: [
+          AppleAuthentication.AppleAuthenticationScope.FULL_NAME,
+          AppleAuthentication.AppleAuthenticationScope.EMAIL,
+        ],
+      });
+      if (credential.identityToken) {
+        const { error, data: { user } } = await supabase.auth.signInWithIdToken({
+          provider: 'apple',
+          token: credential.identityToken,
+        });
+        if (error) throw error;
+      } else {
+        throw new Error('No identityToken.');
+      }
+    } catch (e: any) {
+      if (e.code === 'ERR_REQUEST_CANCELED') {
+        // handle that the user canceled the sign-in flow
+      } else {
+        setMessage({ text: e.message, type: 'error' });
+        if (Platform.OS !== 'web') Alert.alert('Erreur', e.message);
+      }
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -110,6 +182,36 @@ export default function AuthScreen() {
           </Text>
         </TouchableOpacity>
       </View>
+
+      <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 20 }}>
+        <View style={{ flex: 1, height: 1, backgroundColor: theme.icon, opacity: 0.2 }} />
+        <Text style={{ width: 50, textAlign: 'center', color: theme.icon, fontSize: 14 }}>OU</Text>
+        <View style={{ flex: 1, height: 1, backgroundColor: theme.icon, opacity: 0.2 }} />
+      </View>
+
+      <View style={styles.verticallySpaced}>
+        <TouchableOpacity
+          style={[styles.socialButton, { backgroundColor: '#fff', borderColor: '#dedede', borderWidth: 1 }]}
+          onPress={signInWithGoogle}
+          disabled={loading}
+        >
+          <FontAwesome name="google" size={20} color="#DB4437" style={{ marginRight: 10 }} />
+          <Text style={[styles.socialButtonText, { color: '#333' }]}>Continuer avec Google</Text>
+        </TouchableOpacity>
+      </View>
+
+      {Platform.OS === 'ios' && (
+        <View style={[styles.verticallySpaced, styles.mt10]}>
+          <TouchableOpacity
+            style={[styles.socialButton, { backgroundColor: '#000' }]}
+            onPress={signInWithApple}
+            disabled={loading}
+          >
+            <FontAwesome name="apple" size={20} color="#fff" style={{ marginRight: 10 }} />
+            <Text style={[styles.socialButtonText, { color: '#fff' }]}>Continuer avec Apple</Text>
+          </TouchableOpacity>
+        </View>
+      )}
       
       <View style={styles.verticallySpaced}>
         <TouchableOpacity 
@@ -200,6 +302,20 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  socialButton: {
+    height: 50,
+    borderRadius: 8,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  socialButtonText: {
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  mt10: {
+    marginTop: 10,
   },
   switchButton: {
     padding: 10,
