@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, TextInput, Alert, Text, TouchableOpacity, Platform, Image } from 'react-native';
-import { Link } from 'expo-router';
 import { supabase } from '@/utils/supabase';
 import { Colors } from '@/constants/theme';
 import { useColorScheme } from '@/hooks/use-color-scheme';
+import { useRouter } from 'expo-router';
 
 export default function AuthScreen() {
   const [email, setEmail] = useState('');
@@ -13,6 +13,7 @@ export default function AuthScreen() {
   const [message, setMessage] = useState<{ text: string, type: 'error' | 'success'} | null>(null);
   const colorScheme = useColorScheme();
   const theme = Colors[colorScheme ?? 'light'];
+  const router = useRouter();
 
   async function signInWithEmail() {
     setLoading(true);
@@ -126,13 +127,15 @@ export default function AuthScreen() {
       <View style={styles.legalContainer}>
         <Text style={[styles.legalText, { color: theme.icon }]}>
           En continuant, vous acceptez nos{' '}
-          <Link href="/terms" style={[styles.legalLink, { color: theme.tint }]}>CGU</Link>
+          <Text onPress={() => router.push('/terms' as any)} style={[styles.legalLink, { color: theme.tint }]}>CGU</Text>
           {' '}et notre{' '}
-          <Link href="/privacy" style={[styles.legalLink, { color: theme.tint }]}>Politique de confidentialité</Link>.
+          <Text onPress={() => router.push('/privacy' as any)} style={[styles.legalLink, { color: theme.tint }]}>Politique de confidentialité</Text>.
         </Text>
-        <Link href="/faq" style={[styles.legalLink, styles.faqLink, { color: theme.tint }]}>
-          ❔ Comment ça marche (FAQ)
-        </Link>
+        <TouchableOpacity onPress={() => router.push('/faq' as any)}>
+          <Text style={[styles.legalLink, styles.faqLink, { color: theme.tint }]}>
+            ❔ Comment ça marche (FAQ)
+          </Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
