@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, TextInput, Alert, Text, TouchableOpacity, Platform } from 'react-native';
+import { StyleSheet, View, TextInput, Alert, Text, TouchableOpacity, Platform, Image } from 'react-native';
 import { supabase } from '@/utils/supabase';
 import { Colors } from '@/constants/theme';
 import { useColorScheme } from '@/hooks/use-color-scheme';
@@ -51,6 +51,18 @@ export default function AuthScreen() {
 
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
+      <View style={styles.headerContainer}>
+        <Image 
+          source={require('@/assets/images/icon.png')} 
+          style={styles.logo} 
+          resizeMode="contain" 
+        />
+        <Text style={[styles.appName, { color: theme.tint }]}>DogShare</Text>
+        <Text style={[styles.description, { color: theme.text }]}>
+          L'application d'échange de gardes de chiens entre particuliers. Confiez votre chien en toute sérénité ou gagnez des crédits en gardant ceux des autres !
+        </Text>
+      </View>
+
       <Text style={[styles.title, { color: theme.text }]}>
         {isLogin ? 'Connexion' : 'Inscription'}
       </Text>
@@ -119,11 +131,33 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
   },
+  headerContainer: {
+    alignItems: 'center',
+    marginBottom: 30,
+    paddingHorizontal: 10,
+  },
+  logo: {
+    width: 100,
+    height: 100,
+    marginBottom: 10,
+    borderRadius: 20,
+  },
+  appName: {
+    fontSize: 36,
+    fontWeight: '900',
+    marginBottom: 10,
+  },
+  description: {
+    fontSize: 14,
+    textAlign: 'center',
+    lineHeight: 22,
+    opacity: 0.8,
+  },
   title: {
-    fontSize: 28,
+    fontSize: 24,
     fontWeight: 'bold',
     textAlign: 'center',
-    marginBottom: 40,
+    marginBottom: 20,
   },
   verticallySpaced: {
     paddingTop: 4,
