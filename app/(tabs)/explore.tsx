@@ -273,14 +273,14 @@ export default function ExploreScreen() {
             style={[styles.headerButton, { backgroundColor: theme.tint + '20', marginRight: 10 }]}
             onPress={() => setViewMode(viewMode === 'list' ? 'map' : 'list')}
           >
-            <IconSymbol name={viewMode === 'list' ? "map.fill" : "list.bullet"} size={20} color={theme.tint} />
-            <Text style={{color: theme.tint, marginLeft: 5, fontWeight: 'bold'}}>{viewMode === 'list' ? 'Carte' : 'Liste'}</Text>
+            <IconSymbol name={viewMode === 'list' ? "map.fill" : "list.bullet"} size={16} color={theme.tint} />
+            <Text style={{color: theme.tint, marginLeft: 5, fontWeight: 'bold', fontSize: 13}}>{viewMode === 'list' ? 'Carte' : 'Liste'}</Text>
           </TouchableOpacity>
           <AnimatedButton 
             style={[styles.addButton, { backgroundColor: theme.tint }]}
             onPress={() => router.push('/sittings/create' as any)}
           >
-            <IconSymbol name="plus" size={24} color="#fff" />
+            <IconSymbol name="plus" size={20} color="#fff" />
           </AnimatedButton>
         </View>
       </View>
@@ -342,13 +342,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 12,
-    height: 40,
-    borderRadius: 20,
+    height: 36,
+    borderRadius: 18,
   },
   addButton: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
+    width: 36,
+    height: 36,
+    borderRadius: 18,
     justifyContent: 'center',
     alignItems: 'center',
     ...premiumShadow,
