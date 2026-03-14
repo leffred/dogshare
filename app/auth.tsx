@@ -130,6 +130,9 @@ export default function AuthScreen() {
           {' '}et notre{' '}
           <Link href="/privacy" style={[styles.legalLink, { color: theme.tint }]}>Politique de confidentialité</Link>.
         </Text>
+        <Link href="/faq" style={[styles.legalLink, styles.faqLink, { color: theme.tint }]}>
+          ❔ Comment ça marche (FAQ)
+        </Link>
       </View>
     </View>
   );
@@ -238,5 +241,10 @@ const styles = StyleSheet.create({
   },
   legalLink: {
     fontWeight: 'bold',
+  },
+  faqLink: {
+    marginTop: 15,
+    fontSize: 14,
+    textDecorationLine: 'underline',
   }
 });
